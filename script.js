@@ -2,9 +2,17 @@ $(document).ready(function(){
   let romajiDict = {};
   let conversionHistory = [];
 
-  // Load romaji data via AJAX
-  $.getJSON("romaji.json", function(data){
-    romajiDict = data;
+  $.ajax({
+    url: "romaji.json",
+    type: "GET",
+    dataType: "json",
+    success: function(data) {
+      romajiDict = data;
+    },
+    error: function(xhr, status, error) {
+      console.error("Gagal memuat romaji.json:", error);
+      $("#result").text("Gagal memuat data konversi.");
+    }
   });
 
   function convertToRomaji(angka){
@@ -62,8 +70,7 @@ $(document).ready(function(){
   // Restrict input to numbers only
   $("#number").on("input", function(){
     let number = $(this).val();
-    // Remove non-numeric characters
-    $(this).val(number.replace(/[^0-9]/g, ''));
+    $(this).val(number.replace(/[^0-9]/g, '')); // hanya angka
     updateResult(number);
   });
 
